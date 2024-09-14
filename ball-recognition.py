@@ -1,14 +1,24 @@
 #https://temari.co.jp/blog/2021/01/10/opencv-13/
+'''
+動作環境
+HP Pavilion 15
+Windows 11 Home 23H2
+intelcpu, iris xe graphics
+Python 3.11.9
+opencv-python 4.10.0
+'''
 import cv2
 import numpy as np
-
-cap = cv2.VideoCapture('xxxx.mp4') # 任意の動画
+cap = cv2.VideoCapture(".\\20210110_2.gif") # 任意の動画
 
 while(1):
     _, frame = cap.read()
 
     #マスク画像取得
     def getMask(l, u):
+        # 動画を最後まで再生すると終了
+        if frame is None: exit()
+
         # HSVに変換
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -31,7 +41,14 @@ while(1):
     def getContours(img,t,r):
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         ret, thresh = cv2.threshold(gray, t, 255, cv2.THRESH_BINARY)
-        imgEdge, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        #cv2.findContours の戻り値がOpenCVのバージョンによって異なる
+        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        #タプルをリストに変換する必要がある
+        contours=list(contours)
+        #初期化
+        radius_frame = frame
 
         # 一番大きい輪郭を抽出
         contours.sort(key=cv2.contourArea, reverse=True)
@@ -59,7 +76,6 @@ while(1):
 
     #輪郭取得
     contours_frame = getContours(res_red, 50, 30) # (画像, 明度閾値, 最小半径)
-
 
     # 再生
     cv2.imshow('video',contours_frame)
