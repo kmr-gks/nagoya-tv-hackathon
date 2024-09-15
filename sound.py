@@ -21,6 +21,6 @@ stream = p.open(format=pyaudio.paFloat32,
                output=True)
 for j in range(100):
     for i in range(3):
-        play_sound(stream,6600+i*200,0.02)
+        play_sound(stream,6600+i*300,0.02)
     for i in range(3):
-        play_sound(stream,7200+i*200,0.02)
+        play_sound(stream,7500+i*300,0.02)
