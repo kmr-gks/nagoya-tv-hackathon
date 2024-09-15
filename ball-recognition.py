@@ -82,10 +82,13 @@ while(1):
     #res_blue = getMask([110,45,100], [150,255,255])
 
     # 赤マスク H0～10または170～180、S50～255、V200～255
-    res_red = getMask([-10,50,200], [170,255,255])
+    #res_red = getMask([-10,50,200], [170,255,255])
+
+    #黄色
+    res_yellow = getMask([20,50,200], [40,255,255])
 
     #輪郭取得
-    contours_frame = getContours(res_red, 50, 30) # (画像, 明度閾値, 最小半径)
+    contours_frame = getContours(res_yellow, 50, 30) # (画像, 明度閾値, 最小半径)
 
     # フレームの縦横比を取得
     h, w, _ = frame.shape
