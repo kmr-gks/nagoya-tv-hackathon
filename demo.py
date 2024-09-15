@@ -65,6 +65,12 @@ def main():
                 print("catch")
                 ball_speed_x *= 0
                 ball_speed_y *= 0
+                if pressed_keys[K_LEFT] and px>0:
+                    px -= 5
+                    man_rect.move_ip(-5, 0)
+                elif pressed_keys[K_RIGHT] and px<500:
+                    px += 5
+                    man_rect.move_ip(5, 0)                
             else:
                 print("gameover")
                 
