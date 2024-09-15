@@ -1,3 +1,4 @@
+#防犯ブザーを目指す
 import numpy as np
 import pyaudio
 import time
