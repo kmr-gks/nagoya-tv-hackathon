@@ -12,6 +12,8 @@
 
 `pip install opencv-python`
 
+`sudo apt install python3-pyaudio libportaudio2 libportaudiocpp0 portaudio19-dev`
+
 `sudo apt install python3-pygame`
 
 ##### ball-recognition.py
