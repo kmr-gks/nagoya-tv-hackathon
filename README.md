@@ -12,6 +12,8 @@
 
 `pip install opencv-python`
 
+`sudo apt install python3-pygame`
+
 ##### ball-recognition.py
 
 `python .\ball-recognition.py`

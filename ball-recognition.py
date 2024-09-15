@@ -10,6 +10,7 @@ opencv-python 4.10.0
 import cv2
 import numpy as np
 import pyaudio
+import pygame
 
 cap=cv2.VideoCapture(0) #カメラから入力
 
@@ -86,9 +87,12 @@ def getContours(img,t,r):
             print("delta:",delta)
         
         if (delta>5):
-            #非同期にmp3を再生
-            #play_mp3_async("./bouhan_part.mp3")
-            play_sound(stream, 440, frame_ms/1000)
+            #mp3を再生
+            # 再生
+            pygame.mixer.music.play()
+            # 再生終了まで待機
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(60)
 
         return radius_frame
     else:
@@ -102,6 +106,10 @@ stream = p.open(format=pyaudio.paFloat32,
                 rate=SAMPLE_RATE,
                 frames_per_buffer=1024,
                 output=True)
+
+# 初期化 mp3再生用
+pygame.mixer.init()
+pygame.mixer.music.load("bouhan_part.mp3")
 
 while(1):
     _, frame = cap.read()
