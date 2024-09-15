@@ -9,11 +9,22 @@ opencv-python 4.10.0
 '''
 import cv2
 import numpy as np
+import pyaudio
+
 cap=cv2.VideoCapture(0) #カメラから入力
 
 cv2.namedWindow('video', cv2.WINDOW_NORMAL)
 last_radius = 0#前回フレームの半径
 frame_ms =25 #フレーム表示時間 ミリ秒
+
+# サンプリングレートを定義
+SAMPLE_RATE = 44100
+# 指定ストリームで、指定周波数のサイン波を、指定秒数再生する関数
+def play_sound(s: pyaudio.Stream, freq: float, duration: float):
+    # 指定周波数のサイン波を指定秒数分生成
+    samples = np.sin(np.arange(int(duration * SAMPLE_RATE)) * freq * np.pi * 2 / SAMPLE_RATE)
+    # ストリームに渡して再生
+    s.write(samples.astype(np.float32).tobytes())
 
 #マスク画像取得
 def getMask(l, u):
@@ -66,16 +77,31 @@ def getContours(img,t,r):
         last_radius=radius
             
         radius_frame = cv2.circle(frame,center,int(radius),(0,255,0),10)
-        #座標をウィンドウに表示
-        cv2.putText(frame, str(center), [10,50], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-        #半径変化率をウィンドウに表示
-        cv2.putText(frame, str(delta), [10,100], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-        print("delta:",delta)
+        #変化が殆ど無い場合または大きすぎる場合は表示しない
+        if 1<abs(delta) and abs(delta)<10:
+            #座標をウィンドウに表示
+            cv2.putText(frame, str(center), [10,50], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            #半径変化率をウィンドウに表示
+            cv2.putText(frame, str(delta), [10,100], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            print("delta:",delta)
+        
+        if (delta>5):
+            #非同期にmp3を再生
+            #play_mp3_async("./bouhan_part.mp3")
+            play_sound(stream, 440, frame_ms/1000)
 
         return radius_frame
     else:
         return frame
 
+# PyAudio開始
+p = pyaudio.PyAudio()
+# ストリームを開く
+stream = p.open(format=pyaudio.paFloat32,
+                channels=1,
+                rate=SAMPLE_RATE,
+                frames_per_buffer=1024,
+                output=True)
 
 while(1):
     _, frame = cap.read()
