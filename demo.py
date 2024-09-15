@@ -17,6 +17,9 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 
 def main():
+    font1 = pygame.font.SysFont("hg正楷書体pro", 50)
+
+    text1 = font1.render("ゲームオーバー", True, (255,0,0))
     
     px=250
     py=300
@@ -59,28 +62,31 @@ def main():
         ball.move_ip(ball_speed_x, ball_speed_y)
 
         if ball.colliderect(man_rect):
-            #ball_speed_x *= 0
-            #ball_speed_y *= 0
+            ball_speed_x *= 0
+            ball_speed_y *= 0
             if pressed_keys[K_UP]:
                 print("catch")
-                ball_speed_x *= 0
-                ball_speed_y *= 0
-                if pressed_keys[K_LEFT] and px>0:
-                    px -= 5
-                    man_rect.move_ip(-5, 0)
-                elif pressed_keys[K_RIGHT] and px<500:
-                    px += 5
-                    man_rect.move_ip(5, 0)                
+                if pressed_keys[K_LEFT] and ball.left>0:
+                    ball.move_ip(-5, 0)                    
+                elif pressed_keys[K_RIGHT] and ball.right<600:
+                    ball.move_ip(5, 0)
+                elif pressed_keys[K_DOWN]:
+
             else:
-                print("gameover")
+                screen.blit(text1, (120,150))
+                #print("gameover")
                 
+        # ボールが画面の端に当たったら反射
+        if ball.left <= 0 or ball.right >= screen_width:
+            ball_speed_x *= -1
 
-
-        # ボールが画面下に行ったらリセット
+        # ボールが画面上下に行ったらリセット
         if ball.bottom >= screen_height or ball.bottom <= 30:
             ball = pygame.Rect(screen_width // 2 - ball_diameter // 2, 30, ball_diameter, ball_diameter)
             ball_speed_x = 3 * random.choice((1, -1))
             ball_speed_y = 3 * random.choice((1, -1))
+        if ball.top <= 0:
+            ball_speed_y *= -1
 
         pygame.draw.ellipse(screen, red, ball)
         pygame.display.flip()
