@@ -31,10 +31,15 @@ def sound():
 
 def fin():
     font1 = pygame.font.SysFont("hg正楷書体pro", 50)
+    font2 = pygame.font.SysFont("hg正楷書体pro", 20)
     button = pygame.Rect(140, 200, 320, 50)
     text4 = font1.render("終了", True, (0,0,0))
+    button_retry=pygame.Rect(200,260,200,50)
+    text5=font2.render("もう一回挑戦する",True,(0,0,0))
     pygame.draw.rect(screen, (255, 0, 0), button)
+    pygame.draw.rect(screen, (255, 0, 0), button_retry)
     screen.blit(text4, (250,202))
+    screen.blit(text5, (220,262))
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -91,6 +96,7 @@ def main():
     levelchoice = 1
 
     buff=1
+    
 
     while True:
          
@@ -135,6 +141,8 @@ def main():
                         print("level5")
                         levelchoice=0
                         buff=5
+                    if 1<=buff and buff<=5:
+                        backgroundPlay.SoundPlayer.play("bgm.mp3")
             ball_speed_x *= buff
             ball_speed_y *= buff
             pygame.display.update()
@@ -173,7 +181,7 @@ def main():
                 screen.blit(text1, (120,150))
                 pressed_keys =0
                 #print("gameover")
-                backgroundPlay.SoundPlayer.play("image/unmei.mp3")
+                backgroundPlay.SoundPlayer.play("image/unmei.mp3",stop=True)
                 fin()
         else:
             if pressed_keys[K_UP]:
