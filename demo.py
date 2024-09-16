@@ -4,6 +4,7 @@ import random
 import sys
 import time
 import backgroundPlay
+import subprocess
 
 # Pygameを初期化
 pygame.init()
@@ -40,13 +41,18 @@ def fin():
     pygame.draw.rect(screen, (255, 0, 0), button_retry)
     screen.blit(text4, (250,202))
     screen.blit(text5, (220,262))
-    while 1:
+    choice=0
+    while choice==0:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button.collidepoint(event.pos):
                     print("fin button was pressed")
                     pygame.quit()
                     sys.exit()
+                if button_retry.collidepoint(event.pos):
+                    print("retry")
+                    choice=1
+                    #subprocess.run('start python3 demo.py', shell=True)
         pygame.display.update()
 
 
@@ -87,7 +93,6 @@ def main():
 
     ball_diameter = 30
     ball = pygame.Rect(screen_width // 2 - ball_diameter // 2, 30, ball_diameter, ball_diameter)
-    #ball = pygame.Rect(screen_width // 2 - ball_diameter // 2, screen_height // 2 - ball_diameter // 2, ball_diameter, ball_diameter)
     ball_speed_x = 3 * random.choice((1, -1))
     ball_speed_y = 3 * random.choice((1, 0.5))
 
@@ -183,6 +188,10 @@ def main():
                 #print("gameover")
                 backgroundPlay.SoundPlayer.play("image/unmei.mp3",stop=True)
                 fin()
+                ball = pygame.Rect(screen_width // 2 - ball_diameter // 2, 30, ball_diameter, ball_diameter)
+                ball_speed_x = 3 * random.choice((1, -1))
+                ball_speed_y = 3 * random.choice((1, 0.5))
+                backgroundPlay.SoundPlayer.play("bgm.mp3")
         else:
             if pressed_keys[K_UP]:
                 print("キャッチ")
@@ -202,7 +211,12 @@ def main():
                 ball_speed_x *= 0
                 ball_speed_y *= 0
                 screen.blit(text3, (160,150))
+                backgroundPlay.SoundPlayer.play("clear.mp3",stop=True)
                 fin()
+                ball = pygame.Rect(screen_width // 2 - ball_diameter // 2, 30, ball_diameter, ball_diameter)
+                ball_speed_x = 3 * random.choice((1, -1))
+                ball_speed_y = 3 * random.choice((1, 0.5))
+                backgroundPlay.SoundPlayer.play("bgm.mp3")
             
                 
         # ボールが画面の端に当たったら反射
