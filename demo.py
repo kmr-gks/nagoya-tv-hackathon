@@ -3,6 +3,7 @@ from pygame.locals import *
 import random
 import sys
 import time
+import backgroundPlay
 
 # Pygameを初期化
 pygame.init()
@@ -171,8 +172,8 @@ def main():
             else:
                 screen.blit(text1, (120,150))
                 pressed_keys =0
-                sound()
                 #print("gameover")
+                backgroundPlay.SoundPlayer.play("image/unmei.mp3")
                 fin()
         else:
             if pressed_keys[K_UP]:
